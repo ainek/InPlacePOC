@@ -222,31 +222,31 @@ namespace InPlace
 		//
 		// init_from_factory
 		//
-		template<typename Q = T, typename... TN>
+		template<typename Q = T, typename Base = T, typename... TN>
 		typename std::enable_if<has_it<Q>::value, void>::type init_from_factory(TN&&... _vn)
 		{
 			Q::init_from_factory(std::forward<TN&&>(_vn)...);
 		}
 
-		template<typename Q = T, typename... TN>
+		template<typename Q = T, typename Base = T, typename... TN>
 		typename std::enable_if<!has_it<Q>::value, void>::type init_from_factory(TN&&... _vn)
 		{
-			Q::operator=(std::move(Q(std::forward<TN&&>(_vn)...)));
+			Q::operator=(Base(std::forward<TN&&>(_vn)...));
 		}
 
 		//
 		// clear_from_factory
 		//
-		template<typename Q = T>
+		template<typename Q = T, typename Base = T>
 		typename std::enable_if<has_it<Q>::value, void>::type clear_from_factory()
 		{
 			Q::clear_from_factory();
 		}
 
-		template<typename Q = T>
+		template<typename Q = T, typename Base = T>
 		typename std::enable_if<!has_it<Q>::value, void>::type clear_from_factory()
 		{
-			Q::operator=(std::move(Q()));
+			Q::operator=(Base());
 		}
 	};
 

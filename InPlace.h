@@ -328,6 +328,19 @@ namespace InPlace
 
 	public:
 		template<typename... TN>
+		Base* alloc(ObjectInPlace<T, Base>& candidate, TN&&... _vn)
+		{
+			if (!candidate.test_and_set())
+			{
+				candidate.init_from_factory(std::forward<TN&&>(_vn)...);
+
+				return &candidate;
+			}
+
+			return alloc(std::forward<TN&&>(_vn)...);
+		}
+
+		template<typename... TN>
 		Base* alloc(TN&&... _vn)
 		{
 			for (auto it = m_values.begin(); it != m_values.end(); ++it)
